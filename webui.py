@@ -144,11 +144,23 @@ def initial_generate(melody_boolean, MODEL, text, melody, msr, continue_file, du
     return wav
 
 
-def generate(model, text, melody, duration, topk, topp, temperature, cfg_coef, base_duration,
-             sliding_window_seconds, continue_file, cf_cutoff, sc_text, seed, directory_name,finetuned_on):
+def generate_music(model, text, melody, duration, topk, topp, temperature, cfg_coef, base_duration,
+                   sliding_window_seconds, continue_file, cf_cutoff, sc_text, seed, directory_name, finetuned_on):
     global MODEL
     if MODEL is None or MODEL.name != model:
-        MODEL = load_model(model,directory_name,finetuned_on)
+        MODEL = load_model(model, directory_name, finetuned_on)
+
+    final_length_seconds = duration
+    descriptions = text
+
+    return wav
+
+
+def generate_music(model, text, melody, duration, topk, topp, temperature, cfg_coef, base_duration,
+                   sliding_window_seconds, continue_file, cf_cutoff, sc_text, seed, directory_name, finetuned_on):
+    global MODEL
+    if MODEL is None or MODEL.name != model:
+        MODEL = load_model(model, directory_name, finetuned_on)
 
     final_length_seconds = duration
     descriptions = text
@@ -212,6 +224,14 @@ def generate(model, text, melody, duration, topk, topp, temperature, cfg_coef, b
         wav = initial_generate(melody_boolean, MODEL, text, melody, msr, continue_file, duration, cf_cutoff, sc_text)
 
     print(f"Final length: {wav.shape[2] / sr}s")
+
+def generate(model, text, melody, duration, topk, topp, temperature, cfg_coef, base_duration,
+             sliding_window_seconds, continue_file, cf_cutoff, sc_text, seed, directory_name, finetuned_on):
+    wav, cur_seed = generate_music(model, text, melody, duration, topk, topp, temperature, cfg_coef, base_duration,
+                                   sliding_window_seconds, continue_file, cf_cutoff, sc_text, seed, directory_name, finetuned_on)
+
+    sr = MODEL.sample_rate
+                       
     output = wav.detach().cpu().float()[0]
     now = datetime.now()
     d = dirname(abspath(__file__))
