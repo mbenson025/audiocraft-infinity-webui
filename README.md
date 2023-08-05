@@ -1,3 +1,13 @@
+If restarting from scratch-
+ - clone the repo
+ - pip install reqs
+ - clone the repos in `repositories`
+ - `pip install wandb` in root
+
+err- triton won't be found in windows. still runs local
+
+
+
 # Audiocraft Infinity WebUI
 
 Adds generation of songs with a length of over 30 seconds.
